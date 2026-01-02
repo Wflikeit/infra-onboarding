@@ -389,6 +389,7 @@ remove_lines_from_sotaSW() {
 }
 
 install_other_agents() {
+  //
   if grep -q "install_other_agents done" "$SCRIPT_DIR"/$STATUS_FILENAME; then
   	  echo "Skipping install_other_agents"
   else
@@ -396,6 +397,7 @@ install_other_agents() {
 
       echo "Install bare-metal agents..."      
       echo "hardware-discovery-agent hardware-discovery-agent/onboarding.serviceURL string ${HW_INVENTORY_URL}" | debconf-set-selections
+      echo "remote-access-agent remote-access-agent/onboarding.serviceURL string ${HW_INVENTORY_URL}" | debconf-set-selections
       echo "platform-update-agent platform-update-agent/enaDebURL string ${CADDY_APT_PROXY_URL}" | debconf-set-selections
       echo "platform-update-agent platform-update-agent/updateServiceURL string ${UPDATE_SERVICE_URL}" | debconf-set-selections
 
@@ -412,7 +414,8 @@ install_other_agents() {
       apt-get install -y -o Dpkg::Options::="--force-confnew" \
         hardware-discovery-agent="$HARDWARE_DISCOVERY_AGENT_VERSION" \
         in-band-manageability="$IN_BAND_MANAGEABILITY_VERSION" \
-        platform-update-agent="$PLATFORM_UPDATE_AGENT_VERSION"
+        platform-update-agent="$PLATFORM_UPDATE_AGENT_VERSION" \
+        remote-access-agent="$REMOTE_ACCESS_AGENT_VERSION"
 
       if [ "$DISABLE_O11Y_PROFILE" = "true" ]; then
         sed -i '/serviceClients:/ s/platform-telemetry-agent, *//; /serviceClients:/ s/, *platform-telemetry-agent//; /serviceClients:/ s/platform-telemetry-agent//' /etc/edge-node/node/confs/node-agent.yaml
@@ -592,3 +595,4 @@ install_syslogrotate_ufw 2>&1 | tee -a "$SCRIPT_DIR"/$SETUP_STATUS_FILENAME
 disable_unattended_upgrade 2>&1 | tee -a "$SCRIPT_DIR"/$SETUP_STATUS_FILENAME
 echo "Installation completed Successfuly on EdgeNode!!!!" > /dev/tty1
 echo "Installation done" > "$SCRIPT_DIR"/.base_pkg_install_done
+# dodac remote access agent do instalacji na systemie
