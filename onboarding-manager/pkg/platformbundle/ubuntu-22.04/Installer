@@ -389,7 +389,7 @@ remove_lines_from_sotaSW() {
 }
 
 install_other_agents() {
-  //
+  ##
   if grep -q "install_other_agents done" "$SCRIPT_DIR"/$STATUS_FILENAME; then
   	  echo "Skipping install_other_agents"
   else
@@ -415,7 +415,7 @@ install_other_agents() {
         hardware-discovery-agent="$HARDWARE_DISCOVERY_AGENT_VERSION" \
         in-band-manageability="$IN_BAND_MANAGEABILITY_VERSION" \
         platform-update-agent="$PLATFORM_UPDATE_AGENT_VERSION" \
-        remote-access-agent="$REMOTE_ACCESS_AGENT_VERSION"
+#        remote-access-agent="$REMOTE_ACCESS_AGENT_VERSION"
 
       if [ "$DISABLE_O11Y_PROFILE" = "true" ]; then
         sed -i '/serviceClients:/ s/platform-telemetry-agent, *//; /serviceClients:/ s/, *platform-telemetry-agent//; /serviceClients:/ s/platform-telemetry-agent//' /etc/edge-node/node/confs/node-agent.yaml
