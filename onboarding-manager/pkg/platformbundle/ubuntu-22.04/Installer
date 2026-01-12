@@ -397,7 +397,7 @@ install_other_agents() {
 
       echo "Install bare-metal agents..."      
       echo "hardware-discovery-agent hardware-discovery-agent/onboarding.serviceURL string ${HW_INVENTORY_URL}" | debconf-set-selections
-      echo "remote-access-agent remote-access-agent/onboarding.serviceURL string ${HW_INVENTORY_URL}" | debconf-set-selections
+      echo "remote-access-agent remote-access-agent/remoteAccessManager.serviceURL string ${HW_INVENTORY_URL}" | debconf-set-selections
       echo "platform-update-agent platform-update-agent/enaDebURL string ${CADDY_APT_PROXY_URL}" | debconf-set-selections
       echo "platform-update-agent platform-update-agent/updateServiceURL string ${UPDATE_SERVICE_URL}" | debconf-set-selections
 
@@ -415,7 +415,12 @@ install_other_agents() {
         hardware-discovery-agent="$HARDWARE_DISCOVERY_AGENT_VERSION" \
         in-band-manageability="$IN_BAND_MANAGEABILITY_VERSION" \
         platform-update-agent="$PLATFORM_UPDATE_AGENT_VERSION"
-#        remote-access-agent="$REMOTE_ACCESS_AGENT_VERSION"
+      # Note: When enabling remote-access-agent installation, uncomment the lines below:
+      # apt-get install -y -o Dpkg::Options::="--force-confnew" remote-access-agent="$REMOTE_ACCESS_AGENT_VERSION"
+      # Configure remote-access-agent serviceURL after installation (postinst creates config with defaults)
+      # if [ -f /etc/edge-node/node/confs/remote-access-agent.yaml ]; then
+      #   sed -i "s|serviceURL: '.*'|serviceURL: '${HW_INVENTORY_URL}'|" /etc/edge-node/node/confs/remote-access-agent.yaml
+      # fi
 
       if [ "$DISABLE_O11Y_PROFILE" = "true" ]; then
         sed -i '/serviceClients:/ s/platform-telemetry-agent, *//; /serviceClients:/ s/, *platform-telemetry-agent//; /serviceClients:/ s/platform-telemetry-agent//' /etc/edge-node/node/confs/node-agent.yaml
